@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String     @id @default(uuid())
+  name       String
+  email      String     @unique
+  password   String
+
+  workflows  Workflow[]
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@map("users")
+}
+
+model Workflow {
+  id           String            @id @default(uuid())
+  name         String
+  triggerType  String
+  isActive     Boolean           @default(true)
+
+  userId       String
+  user         User              @relation(fields: [userId], references: [id])
+
+  actions      WorkflowAction[]
+  executions   ExecutionLog[]
+
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@map("workflows")
+}
+
+model WorkflowAction {
+  id           String      @id @default(uuid())
+  actionType   String
+  config       Json?
+  sequence     Int
+
+  workflowId   String
+  workflow     Workflow    @relation(fields: [workflowId], references: [id])
+
+  createdAt    DateTime    @default(now())
+
+  @@map("workflow_actions")
+}
+
+model ExecutionLog {
+  id           String      @id @default(uuid())
+  status       String
+  payload      Json?
+
+  workflowId   String
+  workflow     Workflow    @relation(fields: [workflowId], references: [id])
+
+  executedAt   DateTime    @default(now())
+
+  @@map("execution_logs")
+}

@@ -4,6 +4,12 @@ const connection = require("../config/redis");
 const executionRepository = require(
   "../modules/execution/execution.repository"
 );
+const workflowActionRepository = require(
+  "../modules/workflow-action/workflow-action.repository"
+);
+const executeAction = require(
+  "../executors/action.executor"
+);
 
 const worker = new Worker(
   "workflow-execution",
@@ -13,6 +19,20 @@ const worker = new Worker(
     console.log(
       `🚀 Executing Workflow ${workflowId}`
     );
+
+    const actions =
+      await workflowActionRepository.getWorkflowActions(
+        workflowId
+      );
+    console.log(
+      `Found ${actions.length} actions for workflow ${workflowId}`
+    );
+    for (const action of actions) {
+      await executeAction(
+        action,
+        payload
+      );
+    }
 
     await executionRepository.createExecutionLog({
       workflowId,

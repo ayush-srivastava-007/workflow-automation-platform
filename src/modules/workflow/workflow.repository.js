@@ -26,8 +26,24 @@ const findWorkflowById = async (id, userId) => {
   });
 };
 
+const findWorkflowsByTriggerType = async (
+  triggerType
+) => {
+  return prisma.workflow.findMany({
+    where: {
+      triggerType,
+      isActive: true,
+    },
+  });
+};
+
+module.exports = {
+  findWorkflowsByTriggerType,
+};
+
 module.exports = {
   createWorkflow,
   findWorkflowsByUserId,
   findWorkflowById,
+    findWorkflowsByTriggerType,
 };

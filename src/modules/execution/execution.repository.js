@@ -6,6 +6,14 @@ const createExecutionLog = async (data) => {
   });
 };
 
+const updateExecutionLog = async (id, data) => {
+  return prisma.executionLog.update({
+    where: { id },
+    data,
+  });
+};
+
 module.exports = {
   createExecutionLog,
+  updateExecutionLog,
 };

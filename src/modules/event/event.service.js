@@ -24,20 +24,24 @@ const triggerEvent = async ({
       `Executing workflow: ${workflow.name}`
     );
 
-    // await executionRepository.createExecutionLog({
-    //   workflowId: workflow.id,
-    //   status: "SUCCESS",
-    //   payload,
-    // });
-
     await workflowQueue.add(
       "execute-workflow",
       {
         workflowId: workflow.id,
         payload,
-      }
+      },
+      {
+        attempts: 3,
+        backoff: {
+          type: "exponential",
+          delay: 2000,
+        },  
+        removeOnComplete: 100,
+        removeOnFail: 100,
+      },
+      
     );
-    
+
   }
 
   return workflows.length;

@@ -20,6 +20,7 @@
   "homepage": "https://github.com/ayush-srivastava-007/workflow-automation-platform#readme",
   "dependencies": {
     "@prisma/client": "^6.10.1",
+    "axios": "^1.18.0",
     "bcrypt": "^6.0.0",
     "bullmq": "^5.78.0",
     "cors": "^2.8.6",

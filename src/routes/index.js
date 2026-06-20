@@ -11,7 +11,17 @@ router.use("/auth", authRoutes);
 router.use("/workflows", workflowRoutes);
 router.use("/events",eventRoutes);
 router.use("/workflows",workflowActionRoutes);
+router.use(
 
+ "/executions",
+
+ require(
+
+  "../modules/execution/execution.routes"
+
+ )
+
+);
 router.get("/", (req, res) => {
   return res.json({
     success: true,

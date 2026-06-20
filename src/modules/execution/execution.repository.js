@@ -13,7 +13,69 @@ const updateExecutionLog = async (id, data) => {
   });
 };
 
+const getExecutions = async (userId) => {
+  return prisma.executionLog.findMany({
+    where: {
+      workflow: {
+        userId,
+      },
+    },
+
+    include: {
+      workflow: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+
+    orderBy: {
+      executedAt: "desc",
+    },
+  });
+};
+
+const getExecutionById = async (
+  executionId,
+  userId
+) => {
+
+  return prisma.executionLog.findFirst({
+
+    where: {
+
+      id: executionId,
+
+      workflow: {
+        userId,
+      },
+
+    },
+
+    include: {
+
+      workflow: {
+
+        select: {
+
+          id: true,
+
+          name: true,
+
+        },
+
+      },
+
+    },
+
+  });
+
+};
+
 module.exports = {
   createExecutionLog,
   updateExecutionLog,
+  getExecutions,
+  getExecutionById,
 };

@@ -4,6 +4,7 @@ const createActionSchema = z.object({
   actionType: z.enum([
     "LOG",
     "EMAIL",
+    "WEBHOOK",
   ]),
   sequence: z.number().int().positive(),
   config: z.any().optional(),

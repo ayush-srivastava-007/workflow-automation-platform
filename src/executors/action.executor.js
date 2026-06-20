@@ -6,32 +6,42 @@ const executeEmailAction = require(
   "./email.executor"
 );
 
+const executeWebhookAction = require(
+  "./webhook.executor"
+);
+
+//registry pattern for action executors
+const executors = {
+
+  LOG: executeLogAction,
+
+  EMAIL: executeEmailAction,
+
+  WEBHOOK: executeWebhookAction,
+
+};
+
 const executeAction = async (
   action,
   payload
 ) => {
-  switch (action.actionType) {
 
-    case "LOG":
+  const executor =
+    executors[action.actionType];
 
-      return executeLogAction(
-        action,
-        payload
-      );
+  if (!executor) {
 
-    case "EMAIL":
+    throw new Error(
+      `Unsupported action ${action.actionType}`
+    );
 
-      return executeEmailAction(
-        action,
-        payload
-      );
-
-    default:
-
-      throw new Error(
-        `Unsupported action type ${action.actionType}`
-      );
   }
+
+  return executor(
+    action,
+    payload
+  );
 };
 
-module.exports = executeAction;
+module.exports =
+  executeAction;

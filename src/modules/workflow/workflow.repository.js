@@ -37,13 +37,28 @@ const findWorkflowsByTriggerType = async (
   });
 };
 
-module.exports = {
-  findWorkflowsByTriggerType,
+const updateWorkflow = async (id, data) => {
+  return prisma.workflow.update({
+    where: {
+      id,
+    },
+    data,
+  });
+};
+
+const deleteWorkflow = async (id) => {
+  return prisma.workflow.delete({
+    where: {
+      id,
+    },
+  });
 };
 
 module.exports = {
   createWorkflow,
   findWorkflowsByUserId,
   findWorkflowById,
-    findWorkflowsByTriggerType,
+  findWorkflowsByTriggerType,
+  updateWorkflow,
+  deleteWorkflow,
 };

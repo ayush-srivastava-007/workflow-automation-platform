@@ -1,6 +1,7 @@
 const workflowService = require("./workflow.service");
 const {
   createWorkflowSchema,
+  updateWorkflowSchema,
 } = require("./workflow.validation");
 
 const createWorkflow = async (req, res) => {
@@ -65,8 +66,96 @@ const getWorkflowById = async (req, res) => {
   }
 };
 
+const updateWorkflow = async (req, res) => {
+  try {
+    const validatedData =
+      updateWorkflowSchema.parse(req.body);
+
+    const workflow =
+      await workflowService.updateWorkflow(
+        req.params.id,
+        req.user.userId,
+        validatedData
+      );
+
+    if (!workflow) {
+      return res.status(404).json({
+        success: false,
+        message: "Workflow not found",
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: workflow,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const toggleWorkflow = async (req, res) => {
+  try {
+    const workflow =
+      await workflowService.toggleWorkflow(
+        req.params.id,
+        req.user.userId
+      );
+
+    if (!workflow) {
+      return res.status(404).json({
+        success: false,
+        message: "Workflow not found",
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: workflow,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const deleteWorkflow = async (req, res) => {
+  try {
+    const workflow =
+      await workflowService.deleteWorkflow(
+        req.params.id,
+        req.user.userId
+      );
+
+    if (!workflow) {
+      return res.status(404).json({
+        success: false,
+        message: "Workflow not found",
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Workflow deleted",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createWorkflow,
   getWorkflows,
   getWorkflowById,
+  updateWorkflow,
+  toggleWorkflow,
+  deleteWorkflow,
 };

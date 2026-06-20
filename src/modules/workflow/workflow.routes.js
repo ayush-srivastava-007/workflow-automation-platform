@@ -22,4 +22,22 @@ router.get(
   workflowController.getWorkflowById
 );
 
+router.patch(
+  "/:id",
+  authenticate,
+  workflowController.updateWorkflow
+);
+
+router.patch(
+  "/:id/toggle",
+  authenticate,
+  workflowController.toggleWorkflow
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  workflowController.deleteWorkflow
+);
+
 module.exports = router;
